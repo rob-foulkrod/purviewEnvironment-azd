@@ -175,6 +175,7 @@ resource adls 'Microsoft.Storage/storageAccounts@2021-04-01' = {
   }
   properties: {
     isHnsEnabled: true
+    allowBlobPublicAccess: true
   }
   resource blobService 'blobServices' = {
     name: 'default'
@@ -383,7 +384,7 @@ resource sws 'Microsoft.Synapse/workspaces@2021-05-01' = {
 }
 
 // Role Assignment: Who: Managed Identity (Purview); What: Storage Blob Data Reader (RBAC role); Scope: ADLS Gen2 Storage Account
-resource roleAssignment3 'Microsoft.Authorization/roleAssignments@2020-08-01-preview' = {
+resource roleAssignment3 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid('ra03${resourceGroupName}')
   scope: adls
   properties: {
@@ -395,7 +396,7 @@ resource roleAssignment3 'Microsoft.Authorization/roleAssignments@2020-08-01-pre
 }
 
 // Role Assignment: Who: Managed Identity (Data Factory); What: Storage Blob Data Contributor (RBAC role); Scope: ADLS Gen2 Storage Account
-resource roleAssignment7 'Microsoft.Authorization/roleAssignments@2020-08-01-preview' = {
+resource roleAssignment7 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid('ra07${resourceGroupName}')
   scope: adls
   properties: {
@@ -407,7 +408,7 @@ resource roleAssignment7 'Microsoft.Authorization/roleAssignments@2020-08-01-pre
 }
 
 // Role Assignment: Who: Managed Identity (Synapse Analytics); What: Storage Blob Data Contributor (RBAC role); Scope: ADLS Gen2 Storage Account (Synapse Workspace)
-resource roleAssignment8 'Microsoft.Authorization/roleAssignments@2020-08-01-preview' = {
+resource roleAssignment8 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid('ra08${resourceGroupName}')
   scope: swsadls
   properties: {
@@ -419,13 +420,24 @@ resource roleAssignment8 'Microsoft.Authorization/roleAssignments@2020-08-01-pre
 }
 
 // Assign Storage Blob Data Reader RBAC role to Current User
-resource roleAssignment9 'Microsoft.Authorization/roleAssignments@2020-08-01-preview' = {
+resource roleAssignment9 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid('ra09${resourceGroupName}')
   scope: adls
   properties: {
     principalId: principalId
 #disable-next-line use-resource-id-functions
     roleDefinitionId: role.StorageBlobDataReader
+    principalType: 'User'
+  }
+}
+
+resource roleAssignment10 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid('ra07${resourceGroupName}')
+  scope: adls
+  properties: {
+    principalId: principalId
+#disable-next-line use-resource-id-functions
+    roleDefinitionId: role.StorageBlobDataContributor
     principalType: 'User'
   }
 }
