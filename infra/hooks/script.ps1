@@ -17,7 +17,8 @@ param(
     [string]$vaultUri
 )
 
-Install-Module Az.Purview -Force
+# newly deployed v 0.2.2 is not supported in azpowershell 12.3
+Install-Module Az.Purview -RequiredVersion 0.2.1 -Force
 Import-Module Az.Purview
 
 # Variables
