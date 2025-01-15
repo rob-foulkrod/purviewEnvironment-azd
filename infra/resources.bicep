@@ -432,7 +432,7 @@ resource roleAssignment9 'Microsoft.Authorization/roleAssignments@2022-04-01' = 
 }
 
 resource roleAssignment10 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
-  name: guid('ra07${resourceGroupName}')
+  name: guid('ra10${resourceGroupName}')
   scope: adls
   properties: {
     principalId: principalId
