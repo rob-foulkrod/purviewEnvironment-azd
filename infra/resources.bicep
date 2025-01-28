@@ -41,23 +41,7 @@ resource purviewAccount 'Microsoft.Purview/accounts@2021-07-01' = {
   }
 }
 
-// Managed Identity
-resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2018-11-30' = {
-  name: 'configDeployer'
-  location: location
-}
 
-// Role Assignment: Who: Managed Identity (configDeployer); What: Owner (RBAC role); Scope: Resource Group
-resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-08-01-preview' = {
-  name: guid('ra01${resourceGroupName}')
-  scope: resourceGroup()
-  properties: {
-    principalId: userAssignedIdentity.properties.principalId
-#disable-next-line use-resource-id-functions
-    roleDefinitionId: role.Owner
-    principalType: 'ServicePrincipal'
-  }
-}
 
 // Azure SQL Server
 resource sqlsvr 'Microsoft.Sql/servers@2021-02-01-preview' = {
@@ -383,6 +367,38 @@ resource sws 'Microsoft.Synapse/workspaces@2021-05-01' = {
   }
 }
 
+// Managed Identity
+resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2018-11-30' = {
+  name: 'configDeployer'
+  location: location
+}
+
+// Role Assignment: Who: Managed Identity (configDeployer); What: Owner (RBAC role); Scope: Resource Group
+resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-08-01-preview' = {
+  name: guid('ra00${resourceGroupName}')
+  scope: resourceGroup()
+  properties: {
+    principalId: userAssignedIdentity.properties.principalId
+#disable-next-line use-resource-id-functions
+    roleDefinitionId: role.Owner
+    principalType: 'ServicePrincipal'
+  }
+}
+
+// Role Assignment: Who: Managed Identity (configDeployer); What: StorageBlobDataContributor (RBAC role); Scope: Resource Group
+resource roleAssignment1 'Microsoft.Authorization/roleAssignments@2020-08-01-preview' = {
+  name: guid('ra01${resourceGroupName}')
+  scope: resourceGroup()
+  properties: {
+    principalId: userAssignedIdentity.properties.principalId
+#disable-next-line use-resource-id-functions
+    roleDefinitionId: role.StorageBlobDataContributor
+    principalType: 'ServicePrincipal'
+  }
+}
+
+
+
 // Role Assignment: Who: Managed Identity (Purview); What: Storage Blob Data Reader (RBAC role); Scope: ADLS Gen2 Storage Account
 resource roleAssignment3 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   name: guid('ra03${resourceGroupName}')
@@ -462,7 +478,7 @@ resource script 'Microsoft.Resources/deploymentScripts@2023-08-01' = {
     }
   }
   dependsOn: [
-    roleAssignment
+    roleAssignment, roleAssignment1, roleAssignment3, roleAssignment7, roleAssignment8, roleAssignment9, roleAssignment10
   ]
 }
 
