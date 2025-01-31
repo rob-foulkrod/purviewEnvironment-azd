@@ -15,17 +15,17 @@ This repository includes instructions on how to automate the deployment of a pre
 
 1. **Create a new folder on your machine.**
    ```sh
-   mkdir rob-foulkrod/purviewdemo
+   mkdir rob-foulkrod/purviewEnvironment-azd
    ```
 
 2. **Navigate to the new folder.**
    ```sh
-   cd rob-foulkrod/purviewdemo
+   cd rob-foulkrod/purviewEnvironment-azd
    ```
 
 3. **Initialize the deployment with `azd init`.**
    ```sh
-   azd init -t rob-foulkrod/purviewdemo
+   azd init -t rob-foulkrod/purviewEnvironment-azd
    ```
 
 4. **Trigger the actual deployment with `azd up`.**
