@@ -1,6 +1,9 @@
 # Microsoft Purview Demo Environment
 This repository includes instructions on how to automate the deployment of a pre-populated Microsoft Purview demo environment. It is forked from https://github.com/tayganr/purviewdemo and modified to support the AZD demployment tool
 
+![image](https://github.com/user-attachments/assets/1f6f3121-a626-40f6-a228-a5153dde579b)
+
+
 ## Prerequisites
 
 * An active [Azure subscription](https://azure.microsoft.com/en-us/free/).
