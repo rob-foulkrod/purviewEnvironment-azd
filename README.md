@@ -37,7 +37,7 @@ This repository includes instructions on how to automate the deployment of a pre
 
 ## What is the demo scenario about?
 
-- Use the [demo guide](./Demoguide/Demoguide.md).
+- Use the [Demo Guide](https://github.com/rob-foulkrod/purviewEnvironment-azd/blob/main/Demoguide/demoguide.md).
 
 ## 💭 Feedback and Contributing
 Feel free to create issues for bugs, suggestions or Fork and create a PR with new demo scenarios or optimizations to the templates. 
