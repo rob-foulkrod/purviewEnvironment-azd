@@ -19,6 +19,7 @@ var abbrs = loadJsonContent('./abbreviations.json')
 var tags = {
   // Tag all resources with the environment name.
   'azd-env-name': environmentName
+  SecurityControl: 'Ignore'
 }
 
 
