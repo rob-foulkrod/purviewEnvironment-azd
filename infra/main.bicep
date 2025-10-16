@@ -38,6 +38,7 @@ module resources 'resources.bicep' = {
   params: {
     suffix: resourceToken
     principalId: principalId
+    tags: tags
   }
 }
 

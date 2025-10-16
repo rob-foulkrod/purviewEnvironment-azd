@@ -7,6 +7,8 @@ param sqlServerAdminLogin string = 'sqladmin'
 @description('Please specify a password for the Azure SQL Server administrator. Default value: newGuid().')
 param sqlServerAdminPassword string = newGuid()
 
+param tags object = {}
+
 @secure() 
 param principalId string
 
@@ -33,12 +35,13 @@ var sqlSecretName = 'sql-secret'
 resource purviewAccount 'Microsoft.Purview/accounts@2021-07-01' = {
   name: 'pvdemo${suffix}-pv'
   location: location
+
   identity: {
     type: 'SystemAssigned'
   }
-  tags: {
+  tags: union(tags, {
     resourceByPass: 'allowed'
-  }
+  })
 }
 
 
@@ -47,6 +50,7 @@ resource purviewAccount 'Microsoft.Purview/accounts@2021-07-01' = {
 resource sqlsvr 'Microsoft.Sql/servers@2021-02-01-preview' = {
   name: 'pvdemo${suffix}-sqlsvr'
   location: location
+  tags: tags
   properties: {
     administratorLogin: sqlServerAdminLogin
     administratorLoginPassword: sqlServerAdminPassword
@@ -72,6 +76,7 @@ resource sqldb 'Microsoft.Sql/servers/databases@2021-02-01-preview' = {
   parent: sqlsvr
   name: 'pvdemo${suffix}-sqldb'
   location: location
+  tags: tags
   sku: {
     name: 'GP_S_Gen5'
     tier: 'GeneralPurpose'
@@ -91,6 +96,7 @@ resource sqldb 'Microsoft.Sql/servers/databases@2021-02-01-preview' = {
 resource kv 'Microsoft.KeyVault/vaults@2021-04-01-preview' = {
   name: 'pvdemo${take(suffix, 9)}-keyvault'
   location: location
+  tags: tags
   properties: {
     sku: {
       family: 'A'
@@ -154,6 +160,7 @@ resource adls 'Microsoft.Storage/storageAccounts@2021-04-01' = {
   name: 'pvdemo${suffix}adls'
   location: location
   kind: 'StorageV2'
+  tags: tags
   sku: {
     name: 'Standard_LRS'
   }
@@ -185,9 +192,9 @@ resource adf 'Microsoft.DataFactory/factories@2018-06-01' = {
   identity: {
     type: 'SystemAssigned'
   }
-  tags: {
+  tags: union(tags, {
     catalogUri: '${purviewAccount.name}.catalog.purview.azure.com'
-  }
+  })
   resource linkedServiceStorage 'linkedservices@2018-06-01' = {
     name: 'AzureDataLakeStorageLinkedService'
     properties: {
@@ -322,6 +329,7 @@ resource swsadls 'Microsoft.Storage/storageAccounts@2023-05-01' = {
   sku: {
     name: 'Standard_LRS'
   }
+  tags: tags
   properties: {
     isHnsEnabled: true
     networkAcls: {
@@ -346,6 +354,7 @@ resource swsadls 'Microsoft.Storage/storageAccounts@2023-05-01' = {
 resource sws 'Microsoft.Synapse/workspaces@2021-05-01' = {
   name: 'pvdemo${suffix}-synapse'
   location: location
+  tags: tags
   properties: {
     defaultDataLakeStorage: {
       accountUrl: swsadls.properties.primaryEndpoints.dfs
@@ -371,6 +380,7 @@ resource sws 'Microsoft.Synapse/workspaces@2021-05-01' = {
 resource userAssignedIdentity 'Microsoft.ManagedIdentity/userAssignedIdentities@2018-11-30' = {
   name: 'configDeployer'
   location: location
+  tags: tags
 }
 
 // Role Assignment: Who: Managed Identity (configDeployer); What: Owner (RBAC role); Scope: Resource Group
